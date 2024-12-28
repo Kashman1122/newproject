@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <style>
+        *,
+        *:after,
+        *:before {
+            box-sizing: border-box;
+        }
+
+        html {
+            color-scheme: dark only;
+        }
+
+        body {
+            background: black;
+            display: grid;
+            place-items: center;
+            align-content: center;
+            gap: 2rem;
+            min-height: 100vh;
+            font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
+            Helvetica, Arial, sans-serif, system-ui;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body::before {
+            --size: 45px;
+            --line: color-mix(in lch, canvasText, transparent 85%);
+            content: '';
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            background: linear-gradient(
+                    90deg,
+                    var(--line) 1px,
+                    transparent 1px var(--size)
+                )
+                50% 50% / var(--size) var(--size),
+            linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% /
+                var(--size) var(--size);
+            mask: linear-gradient(-25deg, transparent 30%, white);
+            top: 0;
+            transform-style: flat;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .styled-text {
+            position: absolute;
+            top: 50px;
+            left: 30px;
+            font-size: 4em;
+            font-weight: 800;
+            max-width: 55%;
+        }
+
+        .styled-text span {
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background-image: linear-gradient(to right, rgb(185, 129, 250), rgb(219, 174, 252), rgb(240, 218, 255));
+        }
+
+        .description-text {
+            position: absolute;
+            top: 250px; /* Adjusted to position below the main title */
+            left: 30px; /* Left position to start from the left side */
+            font-size: 1.3em;
+            color: #d1d0d0;
+            max-width: 50%;
+        }
+
+
+
+        .image-container {
+            position: absolute;
+            right: 20px; /* Position it on the far right */
+            width: 100%;
+            max-width: 600px; /* Ensure it doesn't exceed this width */
+            height: auto;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .can {
+            width: clamp(240px, 25vmin, 500px);
+            height: clamp(240px, 25vmin, 500px);
+            aspect-ratio: 1;
+            position: relative;
+        }
+
+        .mixer {
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            border: 2px solid white;
+        }
+
+        .mixer:first-of-type {
+            background: var(--base);
+        }
+
+        .mixer__ball {
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform-origin: 50% 100%;
+            translate: -50% 0;
+            z-index: 9999;
+            border: 2px solid white;
+            background: var(--mixed);
+        }
+
+        .mixer__ball::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: canvas;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .mixer__ball::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--mixed);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        /* Progress is 0-50 */
+        .mixer__layer {
+            background: conic-gradient(var(--base), var(--end));
+            --angle: calc(var(--completion, 0) * 1deg);
+            mask: conic-gradient(#000 var(--angle), #0000 var(--angle));
+        }
+
+        .mixer__layer {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+        }
+
+        .level {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .bear-link {
+            color: canvasText;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            width: 48px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            opacity: 0.8;
+        }
+
+        :where(.x-link, .bear-link):is(:hover, :focus-visible) {
+            opacity: 1;
+        }
+        .bear-link svg {
+            width: 75%;
+        }
+        .logo {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 50px;
+            height: auto;
+        }
+        /* From Uiverse.io by gharsh11032000 */
+.button {
+  position: absolute;
+  top:470px;
+  left:280px;
+  width: 180px;
+  height: 70px;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  color: white;
+  flex-direction: column;
+  justify-content: center;
+  border: none;
+  padding: 12px;
+  gap: 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size:20px;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -4px;
+  top: -1px;
+  margin: auto;
+  width: 188px;
+  height: 78px;
+  border-radius: 17px;
+  background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% );
+  z-index: -10;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.button::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100% );
+  transform: translate3d(0, 0, 0) scale(0.95);
+  filter: blur(20px);
+}
+
+.button:hover::after {
+  filter: blur(30px);
+}
+
+.button:hover::before {
+  transform: rotate(-180deg);
+}
+
+.button:active::before {
+  scale: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 780px) {
+    .styled-text {
+        font-size: 5em;
+        font-weight:600px;
+        max-width: 80%;
+        left: 20px;
+    }
+
+    .description-text {
+        top: 250px;
+                    color: #d1d0d0;
+
+        font-size: 1.7em;
+        left: 20px;
+        max-width: 30%;
+    }
+
+    .image-container {
+        width: 100%;
+        margin-top:80px;
+        margin-left:10px;
+    }
+
+    .button {
+        top: 400px;
+        left: 150px;
+        width: 150px;
+        height: 60px;
+        font-size: 16px;
+    }
+}
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .styled-text {
+        font-size: 3em;
+        font-weight:500px;
+        max-width: 80%;
+        left: 20px;
+    }
+
+    .description-text {
+        top: 250px;
+        font-size: 1.2em;
+        left: 20px;
+        max-width: 70%;
+    }
+
+    .image-container {
+        max-width: 80%;
+        right: 10px;
+    }
+
+    .button {
+        top: 400px;
+        left: 150px;
+        width: 150px;
+        height: 60px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .styled-text {
+        font-size: 2em;
+        max-width: 90%;
+        left: 10px;
+    }
+
+    .description-text {
+        top: 180px;
+        font-size: 1.2em;
+        left: 10px;
+        max-width: 80%;
+    }
+
+    .image-container {
+        max-width: 90%;
+        right: 5px;
+    }
+
+    .button {
+        top: 550px;
+        left: 30px;
+        width: 120px;
+        height: 40px;
+        font-size: 14px;
+
+    }
+    .button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -4px;
+  top: -1px;
+  margin: auto;
+  width: 128px;
+  height: 48px;
+  border-radius: 17px;
+  background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% );
+  z-index: -10;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+}
+
+
+    </style>
+</head>
+<body>
+    <img src="/static/Untitled_design__1_-removebg-preview.png" alt="Logo" class="logo">
+
+    <div class="styled-text">
+        <span>A Centralized Dataset Links Provider</span>
+    </div>
+
+    <div class="description-text">
+        #AI-driven provider of the best dataset links.
+
+    </div>
+<button class="button" onclick="f1()">
+  Get Started
+</button>
+    <div class="image-container">
+        <img src="/static/link.jpg" alt="Your Image">
+    </div>
+
+    <div class="can"></div>
+</body>
+</html>
+<script !src="">
+    function f1(){
+    window.location.href='http://192.168.84.65:8000/signin/'
+    }
+</script>
