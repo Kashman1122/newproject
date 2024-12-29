@@ -4,7 +4,7 @@
       "src": "DatasetProvider/wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "3024mb",
+        "maxLambdaSize": "250mb",
         "runtime": "python3.9"
       }
     }
