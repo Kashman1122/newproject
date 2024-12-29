@@ -1,11 +1,11 @@
 {
  "builds":[{
-     "src": "DatasetProvider/wsgi.py",
+     "src": "DatasetProvider/DatasetProvider/wsgi.py",
      "use": "@vercel/python",
      "config": {"maxLambdaSize" : "3024mb","runtime": "python3.9"}
  }],
   "routes":[
     {
       "src": "/(.*)",
-      "dest": "DatasetProvider/wsgi.py"
+      "dest": "DatasetProvider/DatasetProvider/wsgi.py"
 }
