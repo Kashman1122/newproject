@@ -1,11 +1,18 @@
 {
- "builds":[{
-     "src": "DatasetProvider/DatasetProvider/wsgi.py",
-     "use": "@vercel/python",
-     "config": {"maxLambdaSize" : "3024mb","runtime": "python3.9"}
- }],
-  "routes":[
+  "builds": [
+    {
+      "src": "DatasetProvider/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "3024mb",
+        "runtime": "python3.9"
+      }
+    }
+  ],
+  "routes": [
     {
       "src": "/(.*)",
-      "dest": "DatasetProvider/DatasetProvider/wsgi.py"
+      "dest": "DatasetProvider/wsgi.py"
+    }
+  ]
 }
